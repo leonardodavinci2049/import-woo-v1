@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model tbl_product_woo {
+  product_id   Int       @id
+  post_id      Int?
+  product_name String?   @db.VarChar(300)
+  product_url  String?   @db.VarChar(500)
+  slug         String?   @db.VarChar(300)
+  image_main   String?   @db.VarChar(500)
+  image1       String?   @db.VarChar(500)
+  image2       String?   @db.VarChar(500)
+  image3       String?   @db.VarChar(500)
+  image4       String?   @db.VarChar(500)
+  image5       String?   @db.VarChar(500)
+  carta_venda  String?   @db.LongText
+  descricao    String?   @db.LongText
+  createdat    DateTime? @db.DateTime(0)
+  flag_content Int?      @default(0) @db.SmallInt
+  updatedat    DateTime? @db.DateTime(0)
+}
