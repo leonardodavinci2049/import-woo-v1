@@ -15,15 +15,12 @@ import { cn } from "@/lib/utils";
 import ModeToggle from "../theme/mode-toggle";
 
 const TopMenu = [
-  { id: "category", name: "category", href: "/category" },
   {
     id: "product-list-url",
     name: "product-list-url",
     href: "/product-list-url",
   },
   { id: "product-detail", name: "product-detail", href: "/product-detail" },
-  { id: "detail-sku", name: "detail-sku", href: "/product-detail-sku" },
-  { id: "generate-url", name: "generate-url", href: "/generate-url" },
 ];
 
 const Logo = () => {
@@ -36,7 +33,7 @@ const Logo = () => {
           width={24}
           height={24}
         />
-        PROCEDURES
+        WOO EXPORTER
       </h1>
     </Link>
   );
@@ -74,7 +71,7 @@ export default function Header02() {
                   href="/test-procedure"
                   className={buttonVariants({ variant: "default" })}
                 >
-                  Test Procedures
+                  Test EXPORT
                 </Link>
               </div>
             </div>

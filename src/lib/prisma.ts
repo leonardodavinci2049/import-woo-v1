@@ -1,14 +1,15 @@
-import "dotenv/config";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { envs } from "@/core/config/envs";
 import { PrismaClient } from "../../generated/prisma/client";
 
 const adapter = new PrismaMariaDb({
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
+  host: envs.DATABASE_HOST,
+  user: envs.DATABASE_USER,
+  password: envs.DATABASE_PASSWORD,
+  database: envs.DATABASE_NAME,
   connectionLimit: 5,
 });
+
 const prisma = new PrismaClient({ adapter });
 
 export { prisma };

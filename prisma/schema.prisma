@@ -23,5 +23,7 @@ model tbl_product_woo {
   descricao    String?   @db.LongText
   createdat    DateTime? @db.DateTime(0)
   flag_content Int?      @default(0) @db.SmallInt
+  flag_export  Int?      @default(0) @db.SmallInt
+  exportdat    DateTime? @db.DateTime(0)
   updatedat    DateTime? @db.DateTime(0)
 }

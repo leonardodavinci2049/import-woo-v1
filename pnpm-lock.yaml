@@ -38,6 +38,9 @@ importers:
       lucide-react:
         specifier: ^0.561.0
         version: 0.561.0(react@19.2.1)
+      mariadb:
+        specifier: ^3.4.5
+        version: 3.4.5
       next:
         specifier: 16.0.10
         version: 16.0.10(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -56,6 +59,9 @@ importers:
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
+      zod:
+        specifier: ^4.2.0
+        version: 4.2.0
     devDependencies:
       '@biomejs/biome':
         specifier: 2.2.0
@@ -1387,6 +1393,9 @@ packages:
   zeptomatch@2.0.2:
     resolution: {integrity: sha512-H33jtSKf8Ijtb5BW6wua3G5DhnFjbFML36eFu+VdOoVY4HD9e7ggjqdM6639B+L87rjnR6Y+XeRzBXZdy52B/g==}
 
+  zod@4.2.0:
+    resolution: {integrity: sha512-Bd5fw9wlIhtqCCxotZgdTOMwGm1a0u75wARVEY9HMs1X17trvA/lMi4+MGK5EUfYkXVTbX8UDiDKW4OgzHVUZw==}
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -2519,3 +2528,5 @@ snapshots:
   zeptomatch@2.0.2:
     dependencies:
       grammex: 3.1.12
+
+  zod@4.2.0: {}
