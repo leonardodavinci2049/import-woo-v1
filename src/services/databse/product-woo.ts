@@ -85,6 +85,24 @@ export class ProductWooService {
 
     return product;
   }
+
+  /**
+   * Atualiza a flag_export de um produto pelo product_id.
+   */
+  async updateExportFlag(productId: unknown, flagExport: number) {
+    const product_id = parseProductId(productId);
+
+    if (!Number.isInteger(flagExport)) {
+      throw new ServiceValidationError("flag_export deve ser um inteiro.");
+    }
+
+    const product = await prisma.tbl_product_woo.update({
+      where: { product_id },
+      data: { flag_export: flagExport },
+    });
+
+    return product;
+  }
 }
 
 export const productWooService = new ProductWooService();

@@ -1,15 +1,30 @@
+import { connection } from "next/server";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ProductList } from "./componentes/ProductList";
+import { getNotExportedProducts } from "@/lib/data/products";
+import { ProductTable } from "./componentes/ProductTable";
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Indica que esta página usa dados dinâmicos (banco de dados)
+  await connection();
+
+  const products = await getNotExportedProducts(100);
+
   return (
     <div className="container mx-auto py-8 px-4">
       <Card>
-        <CardHeader>
-          <CardTitle>Teste de Produtos - Não Exportados</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Produtos Não Exportados</CardTitle>
+          <Badge variant="outline">{products.length} produtos</Badge>
         </CardHeader>
         <CardContent>
-          <ProductList />
+          {products.length === 0 ? (
+            <div className="text-muted-foreground p-4 text-center">
+              Nenhum produto não exportado encontrado.
+            </div>
+          ) : (
+            <ProductTable products={products} />
+          )}
         </CardContent>
       </Card>
     </div>
