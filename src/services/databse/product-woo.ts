@@ -103,6 +103,60 @@ export class ProductWooService {
 
     return product;
   }
+
+  /**
+   * Atualiza os campos de imagem do servidor (srv_image_main, srv_image1 a srv_image5).
+   * Apenas atualiza os campos que possuem valores (não-null e não-undefined).
+   */
+  async updateServerImages(
+    productId: unknown,
+    images: {
+      srv_image_main?: string | null;
+      srv_image1?: string | null;
+      srv_image2?: string | null;
+      srv_image3?: string | null;
+      srv_image4?: string | null;
+      srv_image5?: string | null;
+    },
+  ) {
+    const product_id = parseProductId(productId);
+
+    // Construir objeto de dados apenas com campos que têm valores
+    const data: Record<string, string> = {};
+
+    if (images.srv_image_main !== null && images.srv_image_main !== undefined) {
+      data.srv_image_main = images.srv_image_main;
+    }
+    if (images.srv_image1 !== null && images.srv_image1 !== undefined) {
+      data.srv_image1 = images.srv_image1;
+    }
+    if (images.srv_image2 !== null && images.srv_image2 !== undefined) {
+      data.srv_image2 = images.srv_image2;
+    }
+    if (images.srv_image3 !== null && images.srv_image3 !== undefined) {
+      data.srv_image3 = images.srv_image3;
+    }
+    if (images.srv_image4 !== null && images.srv_image4 !== undefined) {
+      data.srv_image4 = images.srv_image4;
+    }
+    if (images.srv_image5 !== null && images.srv_image5 !== undefined) {
+      data.srv_image5 = images.srv_image5;
+    }
+
+    // Se nenhum campo foi fornecido, lançar erro
+    if (Object.keys(data).length === 0) {
+      throw new ServiceValidationError(
+        "Nenhuma imagem foi fornecida para atualização.",
+      );
+    }
+
+    const product = await prisma.tbl_product_woo.update({
+      where: { product_id },
+      data,
+    });
+
+    return product;
+  }
 }
 
 export const productWooService = new ProductWooService();

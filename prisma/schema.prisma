@@ -19,6 +19,14 @@ model tbl_product_woo {
   image3       String?   @db.VarChar(500)
   image4       String?   @db.VarChar(500)
   image5       String?   @db.VarChar(500)
+
+  srv_image_main   String?   @db.VarChar(500)
+  srv_image1       String?   @db.VarChar(500)
+  srv_image2       String?   @db.VarChar(500)
+  srv_image3       String?   @db.VarChar(500)
+  srv_image4       String?   @db.VarChar(500)
+  srv_image5       String?   @db.VarChar(500)
+
   carta_venda  String?   @db.LongText
   descricao    String?   @db.LongText
   createdat    DateTime? @db.DateTime(0)
