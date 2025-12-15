@@ -40,4 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# others
+tasks
+/tasks
+.github/
+/docs/
+
 /generated/prisma
