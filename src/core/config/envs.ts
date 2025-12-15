@@ -42,7 +42,8 @@ const envsSchema = z.object({
   // External Assets API (srv-assets-v1)
   EXTERNAL_API_ASSETS_URL: z
     .string()
-    .url("EXTERNAL_API_ASSETS_URL must be a valid URL"),
+    .url("EXTERNAL_API_ASSETS_URL must be a valid URL")
+    .default("http://localhost:5573/api"),
 
   // Database MySQL
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
@@ -54,6 +55,8 @@ const envsSchema = z.object({
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().positive("DATABASE_PORT must be a positive number")),
+  // API Configuration
+  API_KEY: z.string().min(1, "API_KEY is required"),
 });
 
 // Inferir o tipo automaticamente a partir do schema
@@ -100,6 +103,9 @@ if (typeof window === "undefined") {
     DATABASE_NAME: "",
     DATABASE_HOST: "",
     DATABASE_PORT: 0,
+
+    // API Configuration - não deve ser acessada no cliente
+    API_KEY: "",
   };
 }
 
@@ -127,4 +133,8 @@ export const envs = {
   DATABASE_NAME: envVars.DATABASE_NAME,
   DATABASE_HOST: envVars.DATABASE_HOST,
   DATABASE_PORT: envVars.DATABASE_PORT,
+
+  // API Configuration
+  API_KEY: envVars.API_KEY,
+  EXTERNAL_API_ASSETS_KEY: envVars.API_KEY, // Reutiliza a API_KEY existente
 };
