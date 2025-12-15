@@ -45,5 +45,5 @@ tasks
 /tasks
 .github/
 /docs/
-
+/uploads/
 /generated/prisma
