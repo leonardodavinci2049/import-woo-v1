@@ -77,3 +77,26 @@ export interface ExportProgress {
   totalImages: number;
   message: string;
 }
+
+// Progresso em tempo real durante exportação em massa
+export interface ExportBatchProgress {
+  processed: number;
+  total: number;
+  status: "preparing" | "uploading" | "saving" | "completed" | "error";
+  currentProductId: number;
+  message: string;
+}
+
+// Resultado consolidado de exportação em massa
+export interface ExportAllProductsResult {
+  success: boolean;
+  totalProducts: number;
+  processedProducts: number;
+  totalUploaded: number;
+  totalSkipped: number;
+  totalNotFound: number;
+  totalErrors: number;
+  detailedResults: ExportProductImagesResult[];
+  errors: string[];
+  duration: number; // em ms
+}

@@ -15,9 +15,11 @@ export default async function HomePage() {
   return (
     <div className="container mx-auto py-8 px-4">
       {/* Painel de ações */}
-      <div className="mb-8 flex items-center justify-between rounded-lg bg-muted p-4">
-        <RefreshProductsButton />
-        <ExportAllButton />
+      <div className="mb-8 rounded-lg bg-muted p-4">
+        <div className="flex items-center justify-between mb-4">
+          <RefreshProductsButton />
+        </div>
+        <ExportAllButton products={products} />
       </div>
 
       <Card>
