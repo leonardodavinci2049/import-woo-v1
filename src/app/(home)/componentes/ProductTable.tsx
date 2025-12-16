@@ -1,5 +1,6 @@
 import type { ProductWooExportListItem } from "@/lib/data/products";
 import { ProductActions } from "./ProductActions";
+import { ProductExport } from "./ProductExport";
 
 interface ProductTableProps {
   products: ProductWooExportListItem[];
@@ -15,6 +16,7 @@ export function ProductTable({ products }: ProductTableProps) {
             <th className="text-left p-3 font-medium">Nome</th>
             <th className="text-left p-3 font-medium">URL</th>
             <th className="text-left p-3 font-medium">Ações</th>
+            <th className="text-left p-3 font-medium">Exportar</th>
           </tr>
         </thead>
         <tbody>
@@ -45,6 +47,9 @@ export function ProductTable({ products }: ProductTableProps) {
               </td>
               <td className="p-3">
                 <ProductActions productId={product.product_id} />
+              </td>
+              <td className="p-3">
+                <ProductExport productId={product.product_id} />
               </td>
             </tr>
           ))}
