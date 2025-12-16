@@ -157,6 +157,57 @@ export class ProductWooService {
 
     return product;
   }
+
+  /**
+   * Atualiza as imagens do servidor e marca o produto como exportado.
+   * Define flag_export = 1 e exportdat = data atual.
+   */
+  async updateServerImagesAndMarkExported(
+    productId: unknown,
+    images: {
+      srv_image_main?: string | null;
+      srv_image1?: string | null;
+      srv_image2?: string | null;
+      srv_image3?: string | null;
+      srv_image4?: string | null;
+      srv_image5?: string | null;
+    },
+  ) {
+    const product_id = parseProductId(productId);
+
+    // Construir objeto de dados com campos de imagem e flags de exportação
+    const data: Record<string, unknown> = {
+      flag_export: 1,
+      exportdat: new Date(),
+    };
+
+    // Adicionar campos de imagem que foram fornecidos
+    if (images.srv_image_main !== null && images.srv_image_main !== undefined) {
+      data.srv_image_main = images.srv_image_main;
+    }
+    if (images.srv_image1 !== null && images.srv_image1 !== undefined) {
+      data.srv_image1 = images.srv_image1;
+    }
+    if (images.srv_image2 !== null && images.srv_image2 !== undefined) {
+      data.srv_image2 = images.srv_image2;
+    }
+    if (images.srv_image3 !== null && images.srv_image3 !== undefined) {
+      data.srv_image3 = images.srv_image3;
+    }
+    if (images.srv_image4 !== null && images.srv_image4 !== undefined) {
+      data.srv_image4 = images.srv_image4;
+    }
+    if (images.srv_image5 !== null && images.srv_image5 !== undefined) {
+      data.srv_image5 = images.srv_image5;
+    }
+
+    const product = await prisma.tbl_product_woo.update({
+      where: { product_id },
+      data,
+    });
+
+    return product;
+  }
 }
 
 export const productWooService = new ProductWooService();

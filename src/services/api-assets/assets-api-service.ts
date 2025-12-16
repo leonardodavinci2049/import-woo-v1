@@ -115,11 +115,10 @@ export class AssetsApiService {
       formData.append("entityId", request.entityId);
 
       if (request.tags && request.tags.length > 0) {
-        const tagsString = request.tags.join(",");
-        // Debug info about tags removed for cleaner console output
-        formData.append("tags", tagsString);
-      } else {
-        // Debug info about tags removed for cleaner console output
+        // Send tags as individual array elements for proper API parsing
+        for (const tag of request.tags) {
+          formData.append("tags", tag);
+        }
       }
       if (request.description) {
         formData.append("description", request.description);
