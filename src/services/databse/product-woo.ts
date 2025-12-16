@@ -122,7 +122,7 @@ export class ProductWooService {
     const product_id = parseProductId(productId);
 
     // Construir objeto de dados apenas com campos que têm valores
-    const data: Record<string, string> = {};
+    const data: Record<string, unknown> = {};
 
     if (images.srv_image_main !== null && images.srv_image_main !== undefined) {
       data.srv_image_main = images.srv_image_main;
@@ -149,6 +149,9 @@ export class ProductWooService {
         "Nenhuma imagem foi fornecida para atualização.",
       );
     }
+
+    // Adicionar data/hora do update
+    data.updatedat = new Date();
 
     const product = await prisma.tbl_product_woo.update({
       where: { product_id },
@@ -179,6 +182,7 @@ export class ProductWooService {
     const data: Record<string, unknown> = {
       flag_export: 1,
       exportdat: new Date(),
+      updatedat: new Date(),
     };
 
     // Adicionar campos de imagem que foram fornecidos

@@ -17,7 +17,7 @@ export function ExportProgressBar({
 
   const statusMessages = {
     preparing: "Preparando exportação...",
-    uploading: "Enviando imagens...",
+    uploading: "Exportando imagens dos produtos...",
     saving: "Salvando dados no banco...",
     completed: "Exportação concluída!",
     error: "Erro na exportação",
@@ -43,7 +43,9 @@ export function ExportProgressBar({
       <div className="space-y-2 p-4 bg-card rounded-lg border">
         <div className="flex justify-between text-sm font-medium">
           <span className="text-muted-foreground">
-            Processando {progress.processed} de {progress.total} produtos
+            {progress.processed > 0
+              ? `Processando ${progress.processed} de ${progress.total} produtos`
+              : `Iniciando exportação de ${progress.total} produtos...`}
           </span>
           <span className="text-foreground">{Math.round(percentage)}%</span>
         </div>
@@ -51,7 +53,7 @@ export function ExportProgressBar({
         <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
           <div
             className={cn(
-              "h-2 rounded-full transition-all duration-300",
+              "h-2 rounded-full transition-all duration-500 ease-out",
               statusColors[progress.status],
             )}
             style={{ width: `${percentage}%` }}

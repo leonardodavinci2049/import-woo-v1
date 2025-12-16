@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { exportAllProductsImagesAction } from "@/app/actions/action-export-all-products-images";
 import type { ExportBatchProgress } from "@/types/product-export";
@@ -20,6 +20,16 @@ export function useExportAllProducts(products: Product[]) {
   });
 
   const [isPending, startTransition] = useTransition();
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    };
+  }, []);
 
   const exportAll = () => {
     if (products.length === 0) {
@@ -29,22 +39,50 @@ export function useExportAllProducts(products: Product[]) {
 
     startTransition(async () => {
       const productIds = products.map((p) => p.product_id);
+      const totalProducts = products.length;
+
+      // Estimated time: ~110ms per product (based on logs: 11s for 100 products)
+      const estimatedTotalTimeMs = totalProducts * 110;
+      const updateIntervalMs = 500; // Update every 500ms
+      const incrementPerUpdate =
+        totalProducts / (estimatedTotalTimeMs / updateIntervalMs);
 
       setProgress({
         processed: 0,
-        total: products.length,
-        status: "preparing",
+        total: totalProducts,
+        status: "uploading",
         currentProductId: 0,
-        message: "Preparando exportação...",
+        message: "Exportando imagens dos produtos...",
       });
 
+      // Start optimistic progress simulation
+      let simulatedProgress = 0;
+      progressIntervalRef.current = setInterval(() => {
+        simulatedProgress += incrementPerUpdate;
+
+        // Cap at 95% to avoid showing 100% before completion
+        if (simulatedProgress >= totalProducts * 0.95) {
+          simulatedProgress = totalProducts * 0.95;
+          if (progressIntervalRef.current) {
+            clearInterval(progressIntervalRef.current);
+          }
+        }
+
+        setProgress((prev) => ({
+          ...prev,
+          processed: Math.floor(simulatedProgress),
+          message: `Processando ${Math.floor(simulatedProgress)} de ${totalProducts} produtos...`,
+        }));
+      }, updateIntervalMs);
+
       try {
-        const result = await exportAllProductsImagesAction(
-          productIds,
-          (progressUpdate: ExportBatchProgress) => {
-            setProgress(progressUpdate);
-          },
-        );
+        const result = await exportAllProductsImagesAction(productIds);
+
+        // Clear interval when done
+        if (progressIntervalRef.current) {
+          clearInterval(progressIntervalRef.current);
+          progressIntervalRef.current = null;
+        }
 
         if (result.success) {
           const message =
@@ -66,7 +104,7 @@ export function useExportAllProducts(products: Product[]) {
           total: result.totalProducts,
           status: "completed",
           currentProductId: 0,
-          message: "Exportação concluída!",
+          message: `Exportação concluída! ${result.totalUploaded} imagens enviadas em ${(result.duration / 1000).toFixed(1)}s`,
         });
 
         // Hide progress bar after 2 seconds
@@ -78,6 +116,12 @@ export function useExportAllProducts(products: Product[]) {
           }));
         }, 2000);
       } catch (error) {
+        // Clear interval on error
+        if (progressIntervalRef.current) {
+          clearInterval(progressIntervalRef.current);
+          progressIntervalRef.current = null;
+        }
+
         const errorMsg =
           error instanceof Error ? error.message : "Erro desconhecido";
         toast.error(`Erro ao exportar produtos: ${errorMsg}`);
