@@ -208,19 +208,78 @@ export function buildImageListForUpload(product: ProductDetails): {
 }
 
 /**
- * Read file from disk and create a File object
+ * Sanitize product name to create SEO-friendly filename
+ * @param productName - Product name from database
+ * @returns Sanitized slug (lowercase, no special chars, hyphens instead of spaces)
+ */
+export function sanitizeProductName(productName: string | null): string {
+  if (!productName || productName.trim().length === 0) {
+    return "produto";
+  }
+
+  return (
+    productName
+      .trim()
+      .toLowerCase()
+      // Remove accents and special characters
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      // Replace spaces and underscores with hyphens
+      .replace(/[\s_]+/g, "-")
+      // Remove all non-alphanumeric characters except hyphens
+      .replace(/[^a-z0-9-]/g, "")
+      // Remove multiple consecutive hyphens
+      .replace(/-+/g, "-")
+      // Remove leading/trailing hyphens
+      .replace(/^-+|-+$/g, "") ||
+    // Fallback if result is empty
+    "produto"
+  );
+}
+
+/**
+ * Generate SEO-friendly filename from product name and original filename
+ * @param productName - Product name from database
+ * @param originalFileName - Original filename (to preserve extension)
+ * @param fieldSuffix - Optional suffix to differentiate images (e.g., "main", "1", "2")
+ * @returns SEO-optimized filename (e.g., "notebook-gamer-alienware-main.jpg")
+ */
+export function generateSeoFileName(
+  productName: string | null,
+  originalFileName: string,
+  fieldSuffix?: string,
+): string {
+  const sanitizedName = sanitizeProductName(productName);
+  const ext = path.extname(originalFileName).toLowerCase();
+
+  // Build filename: product-name[-suffix].ext
+  const suffix = fieldSuffix ? `-${fieldSuffix}` : "";
+  return `${sanitizedName}${suffix}${ext}`;
+}
+
+/**
+ * Read file from disk and create a File object with SEO-friendly name
  * @param absolutePath - Full path to the file
- * @param fileName - Name for the File object
- * @returns File object
+ * @param fileName - Original name for the File object
+ * @param productName - Product name for SEO optimization (optional)
+ * @param fieldSuffix - Optional suffix to differentiate images (e.g., "main", "1")
+ * @returns File object with renamed file
  */
 export async function readFileAsBlob(
   absolutePath: string,
   fileName: string,
+  productName?: string | null,
+  fieldSuffix?: string,
 ): Promise<File> {
   const buffer = await readFile(absolutePath);
   const mimeType = getMimeTypeFromExtension(absolutePath);
 
-  return new File([buffer], fileName, { type: mimeType });
+  // Use SEO-friendly name if product name is provided
+  const finalFileName = productName
+    ? generateSeoFileName(productName, fileName, fieldSuffix)
+    : fileName;
+
+  return new File([buffer], finalFileName, { type: mimeType });
 }
 
 /**

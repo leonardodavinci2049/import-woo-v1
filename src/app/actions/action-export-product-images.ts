@@ -118,9 +118,21 @@ export async function exportProductImagesAction(
           continue;
         }
 
-        // Read file from disk
+        // Read file from disk with SEO-friendly name
         const fileName = extractFileName(item.localPath);
-        const file = await readFileAsBlob(item.absolutePath, fileName);
+
+        // Determine field suffix for SEO filename (e.g., "main", "1", "2")
+        const fieldSuffix =
+          item.field === "image_main"
+            ? "main"
+            : item.field.replace("image", "");
+
+        const file = await readFileAsBlob(
+          item.absolutePath,
+          fileName,
+          product.product_name, // Pass product name for SEO optimization
+          fieldSuffix,
+        );
 
         // Upload to API
         const response = await assetsApiService.uploadFile({
