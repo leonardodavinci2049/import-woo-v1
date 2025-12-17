@@ -57,7 +57,7 @@ export class ProductWooService {
         flag_export: 0,
       },
       orderBy: {
-        product_id: "asc",
+        image_main: "desc",
       },
       select: {
         product_id: true,

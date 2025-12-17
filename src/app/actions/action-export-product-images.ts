@@ -149,7 +149,9 @@ export async function exportProductImagesAction(
           const errorMsg = Array.isArray(response.message)
             ? response.message.join(", ")
             : response.message;
-          logger.error(`Upload failed for ${item.field}: ${errorMsg}`);
+          logger.error(
+            `[Product ${productId}] Upload failed for ${item.field}: ${errorMsg} (Status: ${response.statusCode})`,
+          );
           results.push({
             field: item.field,
             serverField: item.serverField,
